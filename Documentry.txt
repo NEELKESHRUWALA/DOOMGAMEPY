@@ -1,0 +1,84 @@
+Documentary: A Dive into the Game Development Journey
+Title: The Making of a Pygame Project
+
+Introduction
+Embark on an adventure into the world of game development with Pygame, a Python library designed for game development. This documentary explores the creation, workflow, and inner workings of a Pygame project, offering a behind-the-scenes look at the code and its components.
+
+Chapter 1: Initialization
+Our journey begins with the Game class, the heart of the project. In the __init__ method, Pygame is initialized, the mouse cursor is hidden, and a display window is created. Key components such as the game clock, event handling, and the timer for global events are also set up here.
+
+python
+class Game:
+    def __init__(self):
+        pg.init()
+        pg.mouse.set_visible(False)
+        self.screen = pg.display.set_mode(RES)
+        pg.event.set_grab(True)
+        self.clock = pg.time.Clock()
+        self.delta_time = 1
+        self.global_trigger = False
+        self.global_event = pg.USEREVENT + 0
+        pg.time.set_timer(self.global_event, 40)
+        self.new_game()
+Chapter 2: Setting Up the Game World
+In the new_game method, essential game components are initialized. These include the map, player, object renderer, raycasting engine, object handler, weapon system, sound system, and pathfinding mechanism. These components form the building blocks of our game.
+
+python
+    def new_game(self):
+        self.map = Map(self)
+        self.player = Player(self)
+        self.object_renderer = ObjectRenderer(self)
+        self.raycasting = RayCasting(self)
+        self.object_handler = ObjectHandler(self)
+        self.weapon = Weapon(self)
+        self.sound = Sound(self)
+        self.pathfinding = PathFinding(self)
+        pg.mixer.music.play(-1)
+Chapter 3: The Game Loop
+The run method embodies the core game loop, which perpetually updates and draws the game. This loop ensures the game continues running until the player decides to quit.
+
+python
+    def run(self):
+        while True:
+            self.check_events()
+            self.update()
+            self.draw()
+Chapter 4: Event Handling
+The check_events method handles user inputs and global events. It captures keyboard and mouse events, triggering specific actions such as quitting the game or firing a weapon.
+
+python
+    def check_events(self):
+        self.global_trigger = False
+        for event in pg.event.get():
+            if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                pg.quit()
+                sys.exit()
+            elif event.type == self.global_event:
+                self.global_trigger = True
+            self.player.single_fire_event(event)
+Chapter 5: Updating the Game
+The update method calls the update functions of various components, such as the player, raycasting engine, object handler, and weapon system. This ensures that all game elements are refreshed and interact seamlessly.
+
+python
+    def update(self):
+        self.player.update()
+        self.raycasting.update()
+        self.object_handler.update()
+        self.weapon.update()
+        pg.display.flip()
+        self.delta_time = self.clock.tick(FPS)
+        pg.display.set_caption(f'{self.clock.get_fps() :.1f}')
+Chapter 6: Drawing the Game
+The draw method renders all visual elements on the screen, creating the immersive game world. It utilizes the object renderer and weapon systems to draw game objects and the player's weapon.
+
+python
+    def draw(self):
+        self.object_renderer.draw()
+        self.weapon.draw()
+Conclusion
+This Pygame project showcases the intricate process of game development, from initializing the game environment to handling events, updating components, and rendering visuals. Each chapter of the documentary delves into a specific aspect of the project, highlighting the collaborative efforts of various components to create a cohesive gaming experience.
+
+Credits
+Development: Python and Pygame
+
+Documentation: Neel Keshruwala
